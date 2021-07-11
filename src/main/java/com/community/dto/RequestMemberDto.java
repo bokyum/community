@@ -5,14 +5,14 @@ import lombok.Data;
 import javax.persistence.Column;
 
 @Data
-public class JoinMemberDto {
+public class RequestMemberDto {
 
-    private String userName;
+    private String name;
     private String email;
     private String password;
 
-    public JoinMemberDto(String userName, String email, String password) {
-        this.userName = userName;
+    public RequestMemberDto(String name, String email, String password) {
+        this.name = name;
         this.email = email;
         this.password = password;
     }

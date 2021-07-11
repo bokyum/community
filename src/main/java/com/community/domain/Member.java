@@ -22,7 +22,7 @@ public class Member {
     private Long id;
 
     @Column(length = 20)
-    private String userName;
+    private String name;
     @Column(length = 20)
     private String email;
     @Column(length=20)
@@ -46,8 +46,8 @@ public class Member {
     public Member() {
     }
 
-    public Member(String userName, String email, String password, Authority authority) {
-        this.userName = userName;
+    public Member(String name, String email, String password, Authority authority) {
+        this.name = name;
         this.email = email;
         this.password = password;
         this.authority = authority;
@@ -56,8 +56,8 @@ public class Member {
         this.createAt = LocalDateTime.now();
     }
 
-    public Member(String userName, String email, String password) {
-        this.userName = userName;
+    public Member(String name, String email, String password) {
+        this.name = name;
         this.email = email;
         this.password = password;
         this.authority = Authority.GUEST;
