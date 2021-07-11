@@ -5,7 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity(name="post_reviews")
+@Entity
 @Getter @Setter
 public class PostReview {
 
@@ -17,7 +17,7 @@ public class PostReview {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Member member;
 
 
     private String comment;
