@@ -16,11 +16,11 @@ public class Tag {
     @Column(name="tag_id")
     private Long id;
 
-    @OneToMany
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="keyword_id")
-    private List<Keyword> keywords = new ArrayList<>();
+    private Keyword keyword;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="post_id")
     private Post post;
 }

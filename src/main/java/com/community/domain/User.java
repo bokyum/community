@@ -15,14 +15,14 @@ import java.util.List;
 public class User {
 
     @Id @GeneratedValue
-    @Column(name="user_id")
+    @Column(name="user_id", updatable = false)
     private Long id;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
     @Column(length = 20)
-    private String username;
+    private String userName;
     @Column(length = 30)
     private String email;
     @Column(length=50)
@@ -37,6 +37,6 @@ public class User {
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Review> reviews = new ArrayList<>();
+    private List<PostReview> postReviews = new ArrayList<>();
 
 }

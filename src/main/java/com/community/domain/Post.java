@@ -25,9 +25,9 @@ public class Post {
 
     private String title;
 
-    @OneToOne(mappedBy = "post")
-    private Tag tag;
+    @OneToMany(mappedBy = "post")
+    private List<Tag> tag;
 
     @OneToMany(mappedBy = "post")
-    private List<Review> reviews = new ArrayList<>();
+    private List<PostReview> reviews = new ArrayList<>();
 }

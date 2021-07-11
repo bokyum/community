@@ -17,8 +17,8 @@ public class Keyword {
     @Column(name="keyword_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Tag tag;
+    @OneToMany(mappedBy = "keyword")
+    private List<Tag> tag;
 
     private String word;
 }

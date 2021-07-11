@@ -5,24 +5,25 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity(name="reviews")
+@Entity(name="post_reviews")
 @Getter @Setter
-public class Review {
+public class PostReview {
 
     @Id @GeneratedValue
-    @Column(name="review_id")
+    @Column(name="post_review_id")
     private Long id;
-
-    @ManyToOne(fetch=FetchType.LAZY)
-    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
 
     private String comment;
 
     private String lastCommentAt;
 
-    private Integer like;
-    private Integer disLike;
+    private Integer numOfLike;
+    private Integer numOfDislike;
 }
