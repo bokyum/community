@@ -1,8 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <div class="bodyHeader" th:fragment="bodyHeader">
-    <ul class="nav nav-pills pull-right">
-        <li><a href="/">Home</a></li>
-    </ul>
-    <a href="/"><h3 class="text-muted">Gif Moa</h3></a>
+    <div class="jumbotron">
+
+        <a class="home btn-lg btn-danger" href="/">Gif Moa</a>
+
+        <form class="search-bar" method="get" action="posts">
+            <input type="text" name="title" placeholder="검색할 gif를 검색하세요...">
+            <input type="submit" value="Submit">
+        </form>
+
+        <a class="btn-user btn-lg" href="/members">회원 목록</a>
+        <a class="btn-user btn-lg" href="/members/new">회원 가입</a>
+        <a class="btn-gif btn-lg" href="/items/new">Gif 등록</a>
+        <a class="btn-gif btn-lg" href="/items">Gif 목록</a>
+
+        <br /><br />
+        <hr>
+    </div>
 </div>
