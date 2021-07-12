@@ -1,9 +1,6 @@
 package com.community.domain;
 
 
-import com.community.domain.Authority;
-import com.community.domain.Post;
-import com.community.domain.PostReview;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.rmi.NoSuchObjectException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,6 +75,31 @@ public class MemberService {
         return members;
     }
 
+    @Transactional(readOnly = false)
+    public void updateMemberById(Long id, RequestMemberDto requestMemberDto) {
+        try {
+            isValidEmail(requestMemberDto.getEmail());
+            isValidPassword(requestMemberDto.getPassword());
+            isValidName(requestMemberDto.getName());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("데이터 형식을 맞춰주세요");
+        }
+        try {
+            memberRepository.updateById(id, requestMemberDto);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("이미 존재하는 이메일 정보입니다.");
+        }
+    }
+
+    @Transactional(readOnly = false)
+    public void deleteMemberById(Long id) {
+        try {
+            memberRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("존재하지 않는 회원");
+        }
+    }
+
     private void isValidPassword(String password) {
         if(password.length() <= 8)
             throw new IllegalArgumentException("8글자 이상의 비밀번호를 입력하세요");
@@ -101,4 +127,6 @@ public class MemberService {
         if(!matcher.matches())
             throw new IllegalArgumentException("잘못된 이메일 형식입니다 ");
     }
+
+
 }

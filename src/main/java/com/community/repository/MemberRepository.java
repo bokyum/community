@@ -1,6 +1,7 @@
 package com.community.repository;
 
 import com.community.domain.Member;
+import com.community.dto.RequestMemberDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -23,7 +24,7 @@ public class MemberRepository {
 
     public void save(Member member) {
         try {
-            isValidEmail(member);
+            isValidEmail(member.getEmail());
             em.persist(member);
         }
         catch (Exception e) {
@@ -48,9 +49,35 @@ public class MemberRepository {
     }
 
 
+    public void updateById(Long id, RequestMemberDto requestMemberDto) {
+        try {
 
-    private void isValidEmail(Member member) {
-        String email = member.getEmail();
+            Member member = findById(id);
+            if (requestMemberDto.getEmail() != null) {
+                isValidEmail(requestMemberDto.getEmail());
+                member.setEmail(requestMemberDto.getEmail());
+            }
+            if (requestMemberDto.getName() != null)
+                member.setName(requestMemberDto.getName());
+            if (requestMemberDto.getPassword() != null)
+                member.setPassword(requestMemberDto.getPassword());
+
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    public void deleteById(Long id) {
+        Member member = findById(id);
+        if(member == null)
+            throw new IllegalArgumentException("회원 정보가 없음");
+        em.remove(member);
+        member = null;
+    }
+
+
+
+    private void isValidEmail(String email) {
         List<Member> list = em.createQuery("select m from Member m where m.email =: email", Member.class)
                 .setParameter("email", email)
                 .setFirstResult(0)
