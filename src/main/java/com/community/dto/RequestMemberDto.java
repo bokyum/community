@@ -11,6 +11,9 @@ public class RequestMemberDto {
     private String email;
     private String password;
 
+    public RequestMemberDto() {
+    }
+
     public RequestMemberDto(String name, String email, String password) {
         this.name = name;
         this.email = email;

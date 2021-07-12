@@ -12,7 +12,10 @@ public class ResponseMemberDto {
     private String email;
     private List<Post> posts;
 
-    public ResponseMemberDto(String name, String email,List<Post> posts) {
+    public ResponseMemberDto() {
+    }
+
+    public ResponseMemberDto(String name, String email, List<Post> posts) {
         this.name = name;
         this.email = email;
         this.posts = posts;

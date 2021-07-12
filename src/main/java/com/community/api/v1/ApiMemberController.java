@@ -3,10 +3,9 @@ package com.community.api.v1;
 import com.community.domain.Member;
 import com.community.dto.RequestMemberDto;
 import com.community.dto.ResponseMemberDto;
+import com.community.dto.ReturnMemberDto;
 import com.community.service.MemberService;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,18 +13,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/v1/api")
-public class MemberController {
+public class ApiMemberController {
 
     @Autowired
     MemberService memberService;
 
 
     @ApiOperation("모든 유저 검색")
-    @GetMapping("/users")
+    @GetMapping("/members")
     public ResponseEntity<ReturnMemberDto> allUsers() {
         List<Member> members = memberService.findAllMembers();
         List<ResponseMemberDto> result =
@@ -37,7 +35,7 @@ public class MemberController {
     }
 
     @ApiOperation("유저 데이터 생성")
-    @PostMapping("/users")
+    @PostMapping("/members")
     public ResponseEntity<ReturnMemberDto> createMember(@RequestBody RequestMemberDto requestMemberDto) {
         try {
             Long id = memberService.join(requestMemberDto);
@@ -52,7 +50,7 @@ public class MemberController {
     }
 
     @ApiOperation("특정 유저 검색")
-    @GetMapping("/users/{id}")
+    @GetMapping("/members/{id}")
     public ResponseEntity<ReturnMemberDto> findMemberById(@PathVariable Long id) {
         try {
             Member member = memberService.findMemberById(id);
@@ -69,7 +67,7 @@ public class MemberController {
 
 
     @ApiOperation("업데이트 유저 정보")
-    @PatchMapping("/users/{id}")
+    @PatchMapping("/members/{id}")
     public ResponseEntity<ReturnMemberDto> updateMember(@PathVariable Long id,
                                                         @RequestBody RequestMemberDto requestMemberDto) {
         try {
@@ -89,7 +87,7 @@ public class MemberController {
     }
 
     @ApiOperation("유저 정보 삭제")
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/members/{id}")
     public ResponseEntity<ReturnMemberDto> deleteMember(@PathVariable Long id) {
         try {
             memberService.deleteMemberById(id);
@@ -99,17 +97,5 @@ public class MemberController {
         }
     }
 
-
-
-    @Data
-    private class ReturnMemberDto<T>{
-        T data;
-        String error;
-
-        public ReturnMemberDto(T data, String error) {
-            this.data = data;
-            this.error = error;
-        }
-    }
 
 }

@@ -3,8 +3,6 @@
 ## API Document
 http://localhost:8080/swagger-ui/index.html#/
 
-![img.png](img.png)
-
 ## HTTP Status Code Used
 
 ### Status Code - 2XX
