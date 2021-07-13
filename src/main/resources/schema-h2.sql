@@ -4,7 +4,7 @@ create table keyword (
     primary key (keyword_id)
 )
 
-create table member (
+create table user (
     member_id bigint not null,
     authority varchar(255),
     create_at timestamp,
@@ -22,7 +22,7 @@ create table post (
     title varchar(255),
     member_member_id bigint,
     primary key (post_id)
-    add constraint fk_post_to_member key (member_member_id) references member
+    add constraint fk_post_to_member key (member_member_id) references user
 )
 
 create table post_review (
@@ -34,7 +34,7 @@ create table post_review (
     member_member_id bigint,
     post_post_id bigint,
     primary key (post_review_id)
-    add constraint fk_post_review_to_member foreign key (member_member_id) references member
+    add constraint fk_post_review_to_member foreign key (member_member_id) references user
     add constraint fk_post_review_to_post foreign key (post_post_id) references post
 )
 

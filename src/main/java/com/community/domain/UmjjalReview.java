@@ -17,7 +17,7 @@ public class UmjjalReview {
     private Umjjal umjjal;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+    private User user;
 
 
     private String comment;

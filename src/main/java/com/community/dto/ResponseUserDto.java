@@ -6,17 +6,17 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ResponseMemberDto {
+public class ResponseUserDto {
 
-    private String name;
+    private String username;
     private String email;
     private List<Umjjal> umjjals;
 
-    public ResponseMemberDto() {
+    public ResponseUserDto() {
     }
 
-    public ResponseMemberDto(String name, String email, List<Umjjal> umjjals) {
-        this.name = name;
+    public ResponseUserDto(String username, String email, List<Umjjal> umjjals) {
+        this.username = username;
         this.email = email;
         this.umjjals = umjjals;
     }

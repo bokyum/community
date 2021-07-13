@@ -11,17 +11,17 @@
                 <th>#</th>
                 <th>이름</th>
                 <th>이메일</th>
-                <th>포스트</th>
+                <th>움짤</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="member : ${members}">
-                <td th:text="${member.id}"></td>
-                <td th:text="${member.name}"></td>
-                <td th:text="${member.email}"></td>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.email}"></td>
                 <td>
-                    <span th:each="post : ${member.umjjals}">
-                        <span th:text="${post.getTitle()}"></span>
+                    <span th:each="umjjal : ${user.umjjals}">
+                        <span th:text="${umjjal.getTitle()}"></span>
                     </span>
                 </td>
             </tr>

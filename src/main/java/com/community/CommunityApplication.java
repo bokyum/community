@@ -8,7 +8,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class CommunityApplication {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Throwable {
         SpringApplication.run(CommunityApplication.class, args);
     }
 

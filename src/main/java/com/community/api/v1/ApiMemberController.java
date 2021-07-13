@@ -1,11 +1,13 @@
 package com.community.api.v1;
 
-import com.community.domain.Member;
-import com.community.dto.RequestMemberDto;
-import com.community.dto.ResponseMemberDto;
-import com.community.dto.ReturnMemberDto;
-import com.community.service.MemberService;
+import com.community.domain.User;
+import com.community.dto.RequestUserDto;
+import com.community.dto.ResponseUserDto;
+import com.community.dto.ReturnUserDto;
+import com.community.service.UserService;
 import com.community.validations.EmailValidation;
+import com.community.validations.NameValidation;
+import com.community.validations.ValidationCheck;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,65 +18,62 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-import static com.community.validations.NameValidation.isValidName;
-import static com.community.validations.PasswordValidation.isValidPassword;
-
 @RestController
 @RequestMapping("/v1/api")
 public class ApiMemberController {
 
 
-    private final MemberService memberService;
-    private final EmailValidation emailValidation;
+    private final UserService userService;
 
+    private final ValidationCheck validation;
 
     @Autowired
-    public ApiMemberController(MemberService memberService, EmailValidation emailValidation) {
-        this.memberService = memberService;
-        this.emailValidation = emailValidation;
+    public ApiMemberController(UserService userService, ValidationCheck validation) {
+        this.userService = userService;
+        this.validation = validation;
     }
 
 
 
     @ApiOperation("모든 유저 검색")
-    @GetMapping("/members")
-    public ResponseEntity<ReturnMemberDto> allUsers() {
-        List<Member> members = memberService.findAllMembers();
-        List<ResponseMemberDto> result =
-                members.stream().
-                        map((member) ->
-                new ResponseMemberDto(member.getName(), member.getEmail(), member.getUmjjals()))
+    @GetMapping("/users")
+    public ResponseEntity<ReturnUserDto> allUsers() {
+        List<User> users = userService.findAllUsers();
+        List<ResponseUserDto> result =
+                users.stream().
+                        map((user) ->
+                new ResponseUserDto(user.getUsername(), user.getEmail(), user.getUmjjals()))
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(new ReturnMemberDto(result, null), HttpStatus.OK);
+        return new ResponseEntity<>(new ReturnUserDto(result, null), HttpStatus.OK);
     }
 
     @ApiOperation("유저 데이터 생성")
-    @PostMapping("/members")
-    public ResponseEntity<ReturnMemberDto> createMember(@RequestBody RequestMemberDto requestMemberDto) {
+    @PostMapping("/users")
+    public ResponseEntity<ReturnUserDto> createMember(@RequestBody RequestUserDto requestUserDto) {
         try {
-            isValidName(requestMemberDto.getName());
-            isValidPassword(requestMemberDto.getPassword());
-            emailValidation.isValidEmail(requestMemberDto.getEmail());
+            validation.isValidName(requestUserDto.getUsername());
+            validation.isValidPassword(requestUserDto.getPassword());
+            validation.isValidEmail(requestUserDto.getEmail());
         } catch (Exception e) {
             return new ResponseEntity<>(
-                    new ReturnMemberDto(null, e.getMessage()),
+                    new ReturnUserDto(null, e.getMessage()),
                     HttpStatus.CONFLICT);
         }
 
-        Long id = memberService.join(requestMemberDto);
+        Long id = userService.join(requestUserDto);
 
-        return new ResponseEntity<>(new ReturnMemberDto(id, null), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ReturnUserDto(id, null), HttpStatus.CREATED);
 
     }
 
     @ApiOperation("특정 유저 검색")
-    @GetMapping("/members/{id}")
-    public ResponseEntity<ReturnMemberDto> findMemberById(@PathVariable Long id) {
-            Member member = memberService.findMemberById(id);
-            if(member == null)
-                return new ResponseEntity(new ReturnMemberDto<>(null, "존재하지 않는 유저입니다."),
+    @GetMapping("/users/{id}")
+    public ResponseEntity<ReturnUserDto> findMemberById(@PathVariable Long id) {
+            User user = userService.findUserById(id);
+            if(user == null)
+                return new ResponseEntity(new ReturnUserDto<>(null, "존재하지 않는 유저입니다."),
                         HttpStatus.NO_CONTENT);
-            return new ResponseEntity<>(new ReturnMemberDto(member, null),
+            return new ResponseEntity<>(new ReturnUserDto(user, null),
                    HttpStatus.OK);
     }
 
@@ -82,33 +81,33 @@ public class ApiMemberController {
 
 
     @ApiOperation("업데이트 유저 정보")
-    @PatchMapping("/members/{id}")
-    public ResponseEntity<ReturnMemberDto> updateMember(@PathVariable Long id,
-                                                        @RequestBody RequestMemberDto requestMemberDto) {
+    @PatchMapping("/users/{id}")
+    public ResponseEntity<ReturnUserDto> updateMember(@PathVariable Long id,
+                                                      @RequestBody RequestUserDto requestUserDto) {
         try {
-            emailValidation.isValidEmailWhenUpdate(requestMemberDto.getEmail());
-            isValidPassword(requestMemberDto.getPassword());
-            isValidName(requestMemberDto.getName());
+            validation.isValidNameWhenUpdate(requestUserDto.getUsername());
+            validation.isValidEmailWhenUpdate(requestUserDto.getEmail());
+            validation.isValidPassword(requestUserDto.getPassword());
         } catch (Exception e) {
-            return new ResponseEntity<>(new ReturnMemberDto(null, e.getMessage()),
+            return new ResponseEntity<>(new ReturnUserDto(null, e.getMessage()),
                     HttpStatus.BAD_REQUEST);
         }
-        Member member = memberService.updateMemberById(id, requestMemberDto);
-        ResponseMemberDto responseMemberDto =
-                new ResponseMemberDto(member.getName(), member.getEmail(), member.getUmjjals());
+        User user = userService.updateUserById(id, requestUserDto);
+        ResponseUserDto responseUserDto =
+                new ResponseUserDto(user.getUsername(), user.getEmail(), user.getUmjjals());
 
-        return new ResponseEntity<>(new ReturnMemberDto(responseMemberDto, null), HttpStatus.OK);
+        return new ResponseEntity<>(new ReturnUserDto(responseUserDto, null), HttpStatus.OK);
     }
 
     @ApiOperation("유저 정보 삭제")
-    @DeleteMapping("/members/{id}")
-    public ResponseEntity<ReturnMemberDto> deleteMember(@PathVariable Long id) {
-        Member member = memberService.findMemberById(id);
-        if(member == null) {
-            return new ResponseEntity<>(new ReturnMemberDto(null, "존재하지 않는 회원입니다."), HttpStatus.BAD_REQUEST);
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<ReturnUserDto> deleteMember(@PathVariable Long id) {
+        User user = userService.findUserById(id);
+        if(user == null) {
+            return new ResponseEntity<>(new ReturnUserDto(null, "존재하지 않는 회원입니다."), HttpStatus.BAD_REQUEST);
         }
-        memberService.deleteMember(member);
-        return new ResponseEntity<>(new ReturnMemberDto("success", null), HttpStatus.OK);
+        userService.deleteUser(user);
+        return new ResponseEntity<>(new ReturnUserDto("success", null), HttpStatus.OK);
 
     }
 

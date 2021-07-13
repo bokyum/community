@@ -18,7 +18,7 @@ public class Umjjal {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+    private User user;
 
     private LocalDateTime createdAt;
 

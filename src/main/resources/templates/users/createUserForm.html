@@ -4,10 +4,10 @@
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
-    <form role="form" action="/members/new" th:object="${requestMemberDto}" method="post">
+    <form role="form" action="/users/new" th:object="${user}" method="post">
         <div class="form-group">
             <label th:for="name">이름</label>
-            <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요">
+            <input type="text" th:field="*{username}" class="form-control" placeholder="이름을 입력하세요">
         </div>
         <div class="form-group">
             <label th:for="email">이메일</label>

@@ -10,8 +10,12 @@
             <input type="submit" value="Submit">
         </form>
 
-        <a class="btn-user btn-lg" href="/members">회원 목록</a>
-        <a class="btn-user btn-lg" href="/members/new">회원 가입</a>
+        <h1 th:inline="text">[[${#httpServletRequest.remoteUser}]]</h1>
+        <form th:action="@{/logout}" method="post">
+            <input class="btn-logout btn-lg" type="submit" value="Sign Out"/>
+        </form>
+        <a class="btn-user btn-lg" href="/login">login</a>
+        <a class="btn-user btn-lg" href="/users/new">join</a>
         <a class="btn-gif btn-lg" href="/items/new">Gif 등록</a>
         <a class="btn-gif btn-lg" href="/items">Gif 목록</a>
 

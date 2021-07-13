@@ -5,17 +5,17 @@ import lombok.Data;
 import javax.persistence.Column;
 
 @Data
-public class RequestMemberDto {
+public class RequestUserDto {
 
-    private String name;
+    private String username;
     private String email;
     private String password;
 
-    public RequestMemberDto() {
+    public RequestUserDto() {
     }
 
-    public RequestMemberDto(String name, String email, String password) {
-        this.name = name;
+    public RequestUserDto(String username, String email, String password) {
+        this.username = username;
         this.email = email;
         this.password = password;
     }

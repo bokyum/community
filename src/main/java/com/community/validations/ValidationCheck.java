@@ -11,17 +11,44 @@ import java.util.regex.Pattern;
 
 @Component
 @Transactional(readOnly = true)
-public class EmailValidation {
+public class ValidationCheck {
+    private final UserService userService;
 
     private static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    private static final String PASSWORD_PATTERN =
+            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,50}$";
 
-    private final UserService userService;
 
     @Autowired
-    public EmailValidation(UserService userService) {
+    public ValidationCheck(UserService userService) {
         this.userService = userService;
+    }
+
+    public void isValidPassword(String password) {
+;
+        Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+        Matcher matcher = pattern.matcher(password);
+        if(!matcher.matches())
+            throw new IllegalArgumentException("잘못된 비밀번호 형식입니다.");
+    }
+
+    public void isValidName(String username) {
+        if(username.length() > 30)
+            throw new IllegalArgumentException("입력한 username의 길이가 너무 깁니다.");
+        if(!Pattern.matches("^[0-9a-zA-Z가-힣]*$", username))
+            throw new IllegalArgumentException("username의 특수문자는 들어갈 수 없습니다.");
+        User user = userService.findUserByEmail(username);
+        if(user != null)
+            throw new IllegalArgumentException("이미 존재하는 username 입니다.");
+    }
+
+    public void isValidNameWhenUpdate(String username) {
+        if(username.length() > 30)
+            throw new IllegalArgumentException("입력한 username의 길이가 너무 깁니다.");
+        if(!Pattern.matches("^[0-9a-zA-Z가-힣]*$", username))
+            throw new IllegalArgumentException("username의 특수문자는 들어갈 수 없습니다.");
     }
 
     public void isValidEmail(String email) {
