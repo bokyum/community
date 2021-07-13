@@ -43,7 +43,7 @@ public class ApiMemberController {
         List<ResponseMemberDto> result =
                 members.stream().
                         map((member) ->
-                new ResponseMemberDto(member.getName(), member.getEmail(), member.getPosts()))
+                new ResponseMemberDto(member.getName(), member.getEmail(), member.getUmjjals()))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(new ReturnMemberDto(result, null), HttpStatus.OK);
     }
@@ -95,7 +95,7 @@ public class ApiMemberController {
         }
         Member member = memberService.updateMemberById(id, requestMemberDto);
         ResponseMemberDto responseMemberDto =
-                new ResponseMemberDto(member.getName(), member.getEmail(), member.getPosts());
+                new ResponseMemberDto(member.getName(), member.getEmail(), member.getUmjjals());
 
         return new ResponseEntity<>(new ReturnMemberDto(responseMemberDto, null), HttpStatus.OK);
     }

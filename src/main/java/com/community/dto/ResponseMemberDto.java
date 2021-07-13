@@ -1,6 +1,6 @@
 package com.community.dto;
 
-import com.community.domain.Post;
+import com.community.domain.Umjjal;
 import lombok.Data;
 
 import java.util.List;
@@ -10,14 +10,14 @@ public class ResponseMemberDto {
 
     private String name;
     private String email;
-    private List<Post> posts;
+    private List<Umjjal> umjjals;
 
     public ResponseMemberDto() {
     }
 
-    public ResponseMemberDto(String name, String email, List<Post> posts) {
+    public ResponseMemberDto(String name, String email, List<Umjjal> umjjals) {
         this.name = name;
         this.email = email;
-        this.posts = posts;
+        this.umjjals = umjjals;
     }
 }

@@ -20,7 +20,7 @@
                 <td th:text="${member.name}"></td>
                 <td th:text="${member.email}"></td>
                 <td>
-                    <span th:each="post : ${member.posts}">
+                    <span th:each="post : ${member.umjjals}">
                         <span th:text="${post.getTitle()}"></span>
                     </span>
                 </td>

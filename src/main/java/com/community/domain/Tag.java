@@ -19,6 +19,6 @@ public class Tag {
     private Keyword keyword;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="post_id")
-    private Post post;
+    @JoinColumn(name="umjjal_id")
+    private Umjjal umjjal;
 }

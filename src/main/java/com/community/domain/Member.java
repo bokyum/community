@@ -35,10 +35,10 @@ public class Member {
     private LocalDateTime createAt;
 
     @OneToMany(mappedBy = "member")
-    private List<Post> posts = new ArrayList<>();
+    private List<Umjjal> umjjals = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    private List<PostReview> postReviews = new ArrayList<>();
+    private List<UmjjalReview> umjjalReviews = new ArrayList<>();
 
     public Member() {
     }

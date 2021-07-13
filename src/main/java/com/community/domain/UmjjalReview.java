@@ -7,14 +7,14 @@ import javax.persistence.*;
 
 @Entity
 @Getter @Setter
-public class PostReview {
+public class UmjjalReview {
 
     @Id @GeneratedValue
-    @Column(name="post_review_id")
+    @Column(name="umjjal_review_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Post post;
+    private Umjjal umjjal;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
