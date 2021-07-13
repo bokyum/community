@@ -18,18 +18,11 @@ public class MemberRepository {
 
     @Autowired
     public MemberRepository(EntityManager em) {
-
         this.em = em;
     }
 
     public void save(Member member) {
-        try {
-            isValidEmail(member.getEmail());
-            em.persist(member);
-        }
-        catch (Exception e) {
-            throw e;
-        }
+        em.persist(member);
     }
 
 
@@ -49,44 +42,31 @@ public class MemberRepository {
     }
 
 
-    public void updateById(Long id, RequestMemberDto requestMemberDto) {
-        try {
-
-            Member member = findById(id);
-            if (requestMemberDto.getEmail() != null) {
-                isValidEmail(requestMemberDto.getEmail());
-                member.setEmail(requestMemberDto.getEmail());
-            }
-            if (requestMemberDto.getName() != null)
-                member.setName(requestMemberDto.getName());
-            if (requestMemberDto.getPassword() != null)
-                member.setPassword(requestMemberDto.getPassword());
-
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
+    public Member updateById(Long id, RequestMemberDto requestMemberDto) {
+        Member member = findById(id);
+        member.setEmail(requestMemberDto.getEmail());
+        member.setName(requestMemberDto.getName());
+        member.setPassword(requestMemberDto.getPassword());
+        return member;
     }
 
     public void deleteById(Long id) {
         Member member = findById(id);
-        if(member == null)
-            throw new IllegalArgumentException("회원 정보가 없음");
         em.remove(member);
         member = null;
     }
 
-
-
-    private void isValidEmail(String email) {
-        List<Member> list = em.createQuery("select m from Member m where m.email =: email", Member.class)
+    public Member findByEmail(String email) {
+        List<Member> members = em.createQuery("select m from Member m where m.email =: email", Member.class)
                 .setParameter("email", email)
-                .setFirstResult(0)
-                .setMaxResults(1)
                 .getResultList();
-        Member result = null;
-        if(!list.isEmpty())
-            result = list.get(0);
-        if(result != null)
-            throw new IllegalArgumentException();
+        if(members.isEmpty())
+            return null;
+        return members.get(0);
+    }
+
+    public void deleteMember(Member member) {
+        em.remove(member);
+        member = null;
     }
 }

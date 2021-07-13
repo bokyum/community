@@ -20,9 +20,9 @@ public class Member {
 
     @Column(length = 20)
     private String name;
-    @Column(length = 20)
+    @Column(length = 30)
     private String email;
-    @Column(length=20)
+    @Column(length=50)
     private String password;
 
     @Enumerated(EnumType.STRING)
