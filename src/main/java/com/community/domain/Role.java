@@ -8,5 +8,5 @@ import java.util.Set;
 
 @Embeddable
 public enum Role {
-    Member, ADMIN
+    USER, ADMIN
 }

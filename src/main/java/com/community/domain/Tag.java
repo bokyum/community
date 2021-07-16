@@ -1,6 +1,7 @@
 package com.community.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="tags")
 @Getter @Setter
+@NoArgsConstructor
 public class Tag {
 
     @Id @GeneratedValue

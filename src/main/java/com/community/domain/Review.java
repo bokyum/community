@@ -1,13 +1,20 @@
 package com.community.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
+@NoArgsConstructor
 public class Review {
 
     @Id @GeneratedValue
@@ -18,12 +25,16 @@ public class Review {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member Member;
+    private Member member;
 
 
+    @NotEmpty
     private String comment;
 
-    private LocalDateTime lastComment;
+    @CreatedDate
+    private LocalDateTime createDate;
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
 
     private Integer numOfLike;
     private Integer numOfDislike;
