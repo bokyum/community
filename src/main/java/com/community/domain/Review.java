@@ -4,25 +4,26 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
-public class UmjjalReview {
+public class Review {
 
     @Id @GeneratedValue
-    @Column(name="umjjal_review_id")
+    @Column(name="review_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Umjjal umjjal;
+    private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Member Member;
 
 
     private String comment;
 
-    private String lastCommentAt;
+    private LocalDateTime lastComment;
 
     private Integer numOfLike;
     private Integer numOfDislike;

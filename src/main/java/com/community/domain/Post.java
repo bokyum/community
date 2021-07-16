@@ -10,23 +10,25 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Umjjal {
+public class Post {
 
     @Id
     @GeneratedValue
-    @Column(name="umjjal_id")
+    @Column(name="post_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
-
-    private LocalDateTime createdAt;
+    private Member Member;
 
     private String title;
 
-    @OneToMany(mappedBy = "umjjal")
+    private String content;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastModified;
+
+    @OneToMany(mappedBy = "post")
     private List<Tag> tag;
 
-    @OneToMany(mappedBy = "umjjal")
-    private List<UmjjalReview> reviews = new ArrayList<>();
+    @OneToMany(mappedBy = "post")
+    private List<Review> reviews = new ArrayList<>();
 }
