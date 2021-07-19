@@ -26,3 +26,7 @@ management:
     web:
       exposure:
         include: "*"
+
+token:
+  expiration_time: 86400000 #밀리 세컨드로 기록 (하루)
+  secret: user_token

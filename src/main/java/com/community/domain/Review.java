@@ -25,16 +25,10 @@ public class Review {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
-
+    private User user;
 
     @NotEmpty
     private String comment;
-
-    @CreatedDate
-    private LocalDateTime createDate;
-    @LastModifiedDate
-    private LocalDateTime lastModifiedDate;
 
     private Integer numOfLike;
     private Integer numOfDislike;

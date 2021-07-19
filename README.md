@@ -32,6 +32,26 @@ http://localhost:8080/swagger-ui/index.html#/
 
 
 
+* / -> home
+* /login
+* /logout
+* /join
 
-# Front-End
-https://github.com/eunminlee/react-gifmoa
+한곳에서 처리
+* /userId
+* /userId/delete
+
+
+한곳에서 처리
+* /search
+* /search/tag
+
+* /blog/create
+
+한곳에서 처리
+* /blog/blogId/update
+* /blog/blogId/delete
+
+
+
+

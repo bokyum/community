@@ -24,18 +24,13 @@ public class Post {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+    private User user;
 
     @NotEmpty
     private String title;
 
     @NotEmpty
     private String content;
-
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime lastModified;
 
     @OneToMany(mappedBy = "post")
     private List<Tag> tag;
