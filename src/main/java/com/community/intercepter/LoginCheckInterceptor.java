@@ -1,4 +1,4 @@
-package com.community.domain.repository;
+package com.community.intercepter;
 
 import com.community.SessionConst;
 import lombok.extern.slf4j.Slf4j;

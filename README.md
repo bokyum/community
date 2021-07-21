@@ -32,25 +32,25 @@ http://localhost:8080/swagger-ui/index.html#/
 
 
 
-* / -> home
-* /login
-* /logout
-* /join
+* 공통처리 
+/
 
-한곳에서 처리
-* /userId
-* /userId/delete
+/login
+/join
+/logout
+/@:id/edit
+/@:id/delete
 
 
-한곳에서 처리
+### 블로그 문서
+* /write
+* /edit
 * /search
-* /search/tag
+* /delete
 
-* /blog/create
 
-한곳에서 처리
-* /blog/blogId/update
-* /blog/blogId/delete
+## 진행중
+* 로그인 기능 구현 
 
 
 

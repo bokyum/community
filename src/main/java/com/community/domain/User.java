@@ -1,25 +1,26 @@
 package com.community.domain;
 
 
+
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-
-import org.springframework.data.annotation.LastModifiedDate;
-
-
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import java.util.Collection;
 import java.util.List;
-
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class User{
 
     @Id @GeneratedValue
@@ -34,6 +35,9 @@ public class User{
     private String password;
 
 
+
+
+
     @OneToMany(mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
 
@@ -45,4 +49,6 @@ public class User{
         this.username = username;
         this.password = password;
     }
+
+
 }

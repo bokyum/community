@@ -27,7 +27,7 @@ public class LogInterceptor implements HandlerInterceptor {
             HandlerMethod hm = (HandlerMethod) handler;
         }
 
-        log.info("REQUEST [{}][{}][{}]", uuid, requestURI, handler);
+        log.info("REQUEST [{}][{}][{}]", uuid, requestURI, request.getMethod());
         return true;
     }
 

@@ -63,7 +63,7 @@ public class UserController {
         session.setAttribute(SessionConst.LOGIN_MEMBER, loginUser);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/"));
-        return new ResponseEntity(new ResponseDto<>(loginUser, ""),headers, HttpStatus.OK);
+        return new ResponseEntity(new ResponseDto<>(loginUser, null),headers, HttpStatus.OK);
     }
 
     @PostMapping("/join")
