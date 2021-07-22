@@ -2,7 +2,6 @@ package com.community.config;
 
 
 import com.community.intercepter.LogInterceptor;
-import com.community.intercepter.LoginCheckInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -17,13 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .order(1)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/css/**", "/*.ico", "/error");
-        registry.addInterceptor(new LoginCheckInterceptor())
-                .order(2)
-                .addPathPatterns("/**")
-                .excludePathPatterns(
-                        "/", "/api/v1/join", "/api/v1/login", "/api/v1/logout",
-                        "/error"
-                );
+
     }
 
     @Override

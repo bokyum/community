@@ -5,13 +5,12 @@ package com.community.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.*;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -21,20 +20,28 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User{
+public class User {
 
     @Id @GeneratedValue
     @Column(name="user_id", updatable = false)
     private Long id;
 
-    @NotEmpty
+    @NotBlank
     @Column(unique = true)
     private String username;
+
+    @NotBlank
+    @Email
+    private String email;
 
     @NotEmpty
     private String password;
 
-
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(	name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
 
 
@@ -45,10 +52,9 @@ public class User{
     private List<Review> reviews = new ArrayList<>();
 
 
-    public User(@NotEmpty String username, @NotEmpty String password) {
+    public User(String username, String email, String password) {
         this.username = username;
+        this.email = email;
         this.password = password;
     }
-
-
 }

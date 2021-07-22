@@ -1,86 +1,126 @@
 package com.community.api.v1.controller;
 
 
-import com.community.SessionConst;
-import com.community.api.v1.dto.AuthForm;
-import com.community.api.v1.service.UserService;
+import com.community.api.v1.dto.request.JoinRequest;
+import com.community.api.v1.dto.request.LoginRequest;
+import com.community.api.v1.dto.response.JwtResponse;
+import com.community.api.v1.dto.response.MessageResponse;
+import com.community.domain.ERole;
+import com.community.domain.Role;
 import com.community.domain.User;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import com.community.domain.repository.RoleRepository;
+import com.community.domain.repository.UserRepository;
+import com.community.domain.security.UserDetailsImpl;
+import com.community.security.jwt.JwtUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.net.URI;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/v1")
-@Slf4j
 public class UserController {
+    @Autowired
+    AuthenticationManager authenticationManager;
 
-    private final UserService userService;
+    @Autowired
+    UserRepository userRepository;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto> userDetail(@PathVariable Long id) {
-        User user = userService.findUserById(id);
+    @Autowired
+    RoleRepository roleRepository;
 
-        if(user == null) {
-            new ResponseEntity<>(new ResponseDto<>(null, "존재하지 않는 회원입니다."), HttpStatus.BAD_REQUEST);
-        }
+    @Autowired
+    PasswordEncoder encoder;
 
-        return new ResponseEntity<>(new ResponseDto(user, ""), HttpStatus.OK);
+    @Autowired
+    JwtUtils jwtUtils;
 
-    }
     @PostMapping("/login")
-    public ResponseEntity<ResponseDto> login(@Valid @RequestBody AuthForm form,
-                                             BindingResult bindingResult,
-                                             @RequestParam(defaultValue = "/") String redirectURL,
-                                             HttpServletRequest request,
-                                             HttpServletResponse response) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-        if(bindingResult.hasErrors()) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(URI.create(redirectURL));
-            return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
-        }
-        User loginUser = userService.login(form);
-        log.info("login {}", loginUser);
-        if(loginUser == null) {
-            return  new ResponseEntity<>(new ResponseDto(null, "아이디 또는 비밀번호가 맞지 않습니다"),
-                    HttpStatus.BAD_REQUEST);
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-        }
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
 
-        HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_MEMBER, loginUser);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/"));
-        return new ResponseEntity(new ResponseDto<>(loginUser, null),headers, HttpStatus.OK);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                userDetails.getId(),
+                userDetails.getUsername(),
+                userDetails.getEmail(),
+                roles));
     }
 
     @PostMapping("/join")
-    public ResponseEntity<ResponseDto> join(@Valid @RequestBody AuthForm form){
-        User joinUser = userService.join(form);
-        return new ResponseEntity<>(new ResponseDto(joinUser, null), HttpStatus.OK);
-    }
-
-    @Data
-    private static class ResponseDto<T> {
-
-        T data;
-        String error;
-
-        public ResponseDto(T data, String error) {
-            this.data = data;
-            this.error = error;
+    public ResponseEntity<?> registerUser(@Valid @RequestBody JoinRequest joinRequest) {
+        if (userRepository.existsByUsername(joinRequest.getUsername())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Username is already taken!"));
         }
+
+        if (userRepository.existsByEmail(joinRequest.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is already in use!"));
+        }
+
+        // Create new user's account
+        User user = new User(joinRequest.getUsername(),
+                joinRequest.getEmail(),
+                encoder.encode(joinRequest.getPassword()));
+
+        Set<String> strRoles = joinRequest.getRole();
+        Set<Role> roles = new HashSet<>();
+
+        if (strRoles == null) {
+            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(userRole);
+        } else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "admin":
+                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(adminRole);
+
+                        break;
+                    case "mod":
+                        Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(modRole);
+
+                        break;
+                    default:
+                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(userRole);
+                }
+            });
+        }
+
+        user.setRoles(roles);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 }
