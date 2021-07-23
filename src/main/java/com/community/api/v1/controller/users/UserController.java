@@ -1,18 +1,18 @@
-package com.community.api.v1.controller;
+package com.community.api.v1.controller.users;
 
 
+import com.community.api.v1.dto.ResponseDto;
 import com.community.api.v1.dto.request.JoinRequest;
 import com.community.api.v1.dto.request.LoginRequest;
 import com.community.api.v1.dto.response.JwtResponse;
-import com.community.api.v1.dto.response.MessageResponse;
+import com.community.api.v1.service.UserService;
 import com.community.domain.ERole;
 import com.community.domain.Role;
 import com.community.domain.User;
 import com.community.domain.repository.RoleRepository;
-import com.community.domain.repository.UserRepository;
 import com.community.domain.security.UserDetailsImpl;
 import com.community.security.jwt.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,24 +32,20 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    AuthenticationManager authenticationManager;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    PasswordEncoder encoder;
-
-    @Autowired
-    JwtUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+    private final UserService userService;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder encoder;
+    private final JwtUtils jwtUtils;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+
+        if(!userService.existsByUsername(loginRequest.getUsername()))
+            throw new IllegalArgumentException("존재하지 않는 아이디입니다.");
+
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -62,28 +58,36 @@ public class UserController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
+        JwtResponse jwtResponse = new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
-                roles));
+                roles);
+        return ResponseEntity.ok(new ResponseDto<>(jwtResponse, null));
     }
 
     @PostMapping("/join")
     public ResponseEntity<?> registerUser(@Valid @RequestBody JoinRequest joinRequest) {
-        if (userRepository.existsByUsername(joinRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
+        if (userService.existsByUsername(joinRequest.getUsername())) {
+            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
 
-        if (userRepository.existsByEmail(joinRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+        if (userService.existsByEmail(joinRequest.getEmail())) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
 
-        // Create new user's account
+        User user = createUser(joinRequest);
+        userService.join(user);
+
+        return ResponseEntity.ok(new ResponseDto<>("정상적으로 회원가입되었습니다", null));
+    }
+
+
+
+
+
+
+    private User createUser(JoinRequest joinRequest) {
         User user = new User(joinRequest.getUsername(),
                 joinRequest.getEmail(),
                 encoder.encode(joinRequest.getPassword()));
@@ -119,8 +123,6 @@ public class UserController {
         }
 
         user.setRoles(roles);
-        userRepository.save(user);
-
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        return user;
     }
 }

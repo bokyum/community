@@ -20,6 +20,7 @@ public class Post {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
     private User user;
 
     @NotEmpty
@@ -33,4 +34,7 @@ public class Post {
 
     @OneToMany(mappedBy = "post")
     private List<Review> reviews = new ArrayList<>();
+
+    @Embedded
+    private ForManageDate forManageDate;
 }

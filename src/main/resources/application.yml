@@ -27,6 +27,7 @@ management:
       exposure:
         include: "*"
 
+
 marco:
   app:
     jwtSecret: al9w83v5o9a83n75o9pn375vopan735opv8awn73p58vnawpi8nv7aainucwlriawl5r7lo2375nlai8735ilao837n5cia8735c9pin375c8a7c95

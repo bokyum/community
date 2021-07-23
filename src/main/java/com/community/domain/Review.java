@@ -18,9 +18,11 @@ public class Review {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="post_id")
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
     private User user;
 
     @NotEmpty
@@ -28,4 +30,7 @@ public class Review {
 
     private Integer numOfLike;
     private Integer numOfDislike;
+
+    @Embedded
+    private ForManageDate forManageDate;
 }

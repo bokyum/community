@@ -2,6 +2,10 @@ package com.community.domain;
 
 
 
+import com.community.domain.ForManageDate;
+import com.community.domain.Post;
+import com.community.domain.Review;
+import com.community.domain.Role;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,7 +21,6 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -51,7 +54,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Review> reviews = new ArrayList<>();
 
+    @Embedded
+    private ForManageDate forManageDate;
 
+    @Builder
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;

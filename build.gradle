@@ -14,6 +14,8 @@ configurations {
     }
 }
 
+def querydslVersion = "4.3.1"
+
 repositories {
     mavenCentral()
 }
@@ -44,7 +46,15 @@ dependencies {
     compileOnly('io.jsonwebtoken:jjwt-api:0.11.1')
     runtimeOnly('io.jsonwebtoken:jjwt-jackson:0.11.1')
 
-    //스프링부트가 라이브러리 정보를 지정해 두지 않은 것은 버전 정보를 입력해 두어야함
+// Querydsl
+    implementation group: 'com.querydsl', name: 'querydsl-jpa', version: querydslVersion
+    implementation group: 'com.querydsl', name: 'querydsl-apt', version: querydslVersion
+    implementation group: 'com.querydsl', name: 'querydsl-core', version: querydslVersion
+
+    annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', version: querydslVersion
+    annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', version: querydslVersion, classifier: 'jpa'
+    annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+    annotationProcessor("jakarta.annotation:jakarta.annotation-api")
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
@@ -54,4 +64,8 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+clean {
+    delete file('src/main/generated') // 인텔리제이 Annotation processor 생성물 생성위치
 }
