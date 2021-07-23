@@ -1,4 +1,4 @@
-package com.community.api.v1.dto.request;
+package com.community.api.v1.dto.request.auth;
 
 import lombok.Data;
 

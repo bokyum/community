@@ -35,6 +35,7 @@ public class User {
 
     @NotBlank
     @Email
+    @Column(unique = true)
     private String email;
 
     @NotEmpty
@@ -63,4 +64,6 @@ public class User {
         this.email = email;
         this.password = password;
     }
+
+
 }
