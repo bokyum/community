@@ -24,9 +24,11 @@ public class QReview extends EntityPathBase<Review> {
 
     public final StringPath comment = createString("comment");
 
-    public final QForManageDate forManageDate;
+    public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final DateTimePath<java.time.LocalDateTime> lastModifiedDate = createDateTime("lastModifiedDate", java.time.LocalDateTime.class);
 
     public final NumberPath<Integer> numOfDislike = createNumber("numOfDislike", Integer.class);
 
@@ -54,9 +56,8 @@ public class QReview extends EntityPathBase<Review> {
 
     public QReview(Class<? extends Review> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.forManageDate = inits.isInitialized("forManageDate") ? new QForManageDate(forProperty("forManageDate")) : null;
         this.post = inits.isInitialized("post") ? new QPost(forProperty("post"), inits.get("post")) : null;
-        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 
 }

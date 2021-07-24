@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 
 @Repository
 public class JPQLUserRepository {
@@ -23,7 +24,7 @@ public class JPQLUserRepository {
         user.setUsername(req.getUsername());
         user.setEmail(req.getEmail());
         user.setPassword(req.getPassword());
-
+        user.setLastModifiedDate(LocalDateTime.now());
         return user;
     }
 }

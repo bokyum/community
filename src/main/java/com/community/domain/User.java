@@ -2,11 +2,9 @@ package com.community.domain;
 
 
 
-import com.community.domain.ForManageDate;
-import com.community.domain.Post;
-import com.community.domain.Review;
-import com.community.domain.Role;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -14,8 +12,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.*;
-
-import java.util.stream.Collectors;
 
 
 @Entity
@@ -55,14 +51,19 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Review> reviews = new ArrayList<>();
 
-    @Embedded
-    private ForManageDate forManageDate;
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
+
 
     @Builder
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.createdAt = LocalDateTime.now();
+        this.lastModifiedDate = LocalDateTime.now();
     }
 
 

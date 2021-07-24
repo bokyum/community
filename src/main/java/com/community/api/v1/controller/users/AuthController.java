@@ -86,6 +86,7 @@ public class AuthController {
 
 
 
+
     private User createUser(JoinRequest joinRequest) {
         User user = new User(joinRequest.getUsername(),
                 joinRequest.getEmail(),

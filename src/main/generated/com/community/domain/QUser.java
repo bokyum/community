@@ -18,15 +18,15 @@ public class QUser extends EntityPathBase<User> {
 
     private static final long serialVersionUID = -677710941L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QUser user = new QUser("user");
+
+    public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
     public final StringPath email = createString("email");
 
-    public final QForManageDate forManageDate;
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final DateTimePath<java.time.LocalDateTime> lastModifiedDate = createDateTime("lastModifiedDate", java.time.LocalDateTime.class);
 
     public final StringPath password = createString("password");
 
@@ -39,24 +39,15 @@ public class QUser extends EntityPathBase<User> {
     public final StringPath username = createString("username");
 
     public QUser(String variable) {
-        this(User.class, forVariable(variable), INITS);
+        super(User.class, forVariable(variable));
     }
 
     public QUser(Path<? extends User> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QUser(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QUser(PathMetadata metadata, PathInits inits) {
-        this(User.class, metadata, inits);
-    }
-
-    public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.forManageDate = inits.isInitialized("forManageDate") ? new QForManageDate(forProperty("forManageDate")) : null;
+        super(User.class, metadata);
     }
 
 }

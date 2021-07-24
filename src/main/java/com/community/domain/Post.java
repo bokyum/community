@@ -3,9 +3,12 @@ package com.community.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,15 +29,22 @@ public class Post {
     @NotEmpty
     private String title;
 
+    private String shortDescription;
+
     @NotEmpty
+    @Lob
     private String content;
 
     @OneToMany(mappedBy = "post")
     private List<Tag> tag;
 
+
     @OneToMany(mappedBy = "post")
     private List<Review> reviews = new ArrayList<>();
 
-    @Embedded
-    private ForManageDate forManageDate;
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
+
 }

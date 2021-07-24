@@ -3,10 +3,13 @@ package com.community.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
@@ -31,6 +34,9 @@ public class Review {
     private Integer numOfLike;
     private Integer numOfDislike;
 
-    @Embedded
-    private ForManageDate forManageDate;
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
+
 }

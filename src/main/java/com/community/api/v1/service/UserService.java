@@ -17,13 +17,8 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UserRepositorySupport userRepositorySupport;
     private final JPQLUserRepository jpqlUserRepository;
 
-    @Transactional(readOnly = false)
-    public void join(User user) {
-        userRepository.save(user);
-    }
 
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
@@ -33,10 +28,27 @@ public class UserService {
         return userRepository.existsByUsername(username);
     }
 
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
+    public User findUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public User findUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElse(null);
+    }
+
     public User userDetails(Long id) {
         return userRepository.findById(id).orElseThrow(() ->
             new IllegalArgumentException("존재하지 않는 회원 정보입니다.")
         );
+    }
+
+    @Transactional(readOnly = false)
+    public void join(User user) {
+        userRepository.save(user);
     }
 
     @Transactional(readOnly = false)
@@ -49,10 +61,7 @@ public class UserService {
        return jpqlUserRepository.updateUserBasicInfo(user.get(), req);
     }
 
-    public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
-    }
-
+    @Transactional(readOnly = false)
     public void deleteUser(Long id) {
         Optional<User> user = userRepository.findById(id);
         if(user.isEmpty())
@@ -60,11 +69,5 @@ public class UserService {
         userRepository.delete(user.get());
     }
 
-    public User findUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
-    }
 
-    public User findUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElse(null);
-    }
 }
