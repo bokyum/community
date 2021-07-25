@@ -33,47 +33,46 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDto> userDetails(@PathVariable Long id, HttpServletRequest request) {
-        String token = parseJwt(request);
-        String usernameWithJWT = jwtUtils.getUserNameFromJwtToken(token);
-        User user = userService.userDetails(id);
-        if(!user.getUsername().equals(usernameWithJWT))
-            throw new IllegalArgumentException("접근권한이 없습니다.");
-        if(user == null)
-            throw new IllegalArgumentException("존재하지 않는 회원 정보입니다.");
+        User user = getUser(id, request);
 
         return new ResponseEntity<>(new ResponseDto(user, null), HttpStatus.OK);
     }
 
+
     @PatchMapping("/{id}")
     public ResponseEntity<ResponseDto> updateUser(@PathVariable Long id, @RequestBody UserInfoRequest req,
                                                   HttpServletRequest request) {
-        String token = parseJwt(request);
-        String usernameWithJWT = jwtUtils.getUserNameFromJwtToken(token);
-        User user = userService.userDetails(id);
-        if(!user.getUsername().equals(usernameWithJWT))
-            throw new IllegalArgumentException("접근권한이 없습니다.");
-
+        User user = getUser(id, request);
 
         authValidation.isValidNameWhenUpdate(id, req.getUsername());
         authValidation.isValidEmailWhenUpdate(id, req.getEmail());
         authValidation.isValidPassword(req.getPassword());
 
         req.setPassword(encoder.encode(req.getPassword()));
-        User updatedUser = userService.updateUserInfo(id, req);
+        User updatedUser = userService.updateUserInfo(user, req);
 
         return new ResponseEntity<>(new ResponseDto(updatedUser, null), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDto> deleteUser(@PathVariable Long id, HttpServletRequest request) {
+        User user = getUser(id, request);
+
+        userService.deleteUser(user);
+        return new ResponseEntity<>(new ResponseDto("정상적으로 탈퇴되었습니다.", null), HttpStatus.OK);
+    }
+
+    private User getUser(Long id, HttpServletRequest request) {
         String token = parseJwt(request);
         String usernameWithJWT = jwtUtils.getUserNameFromJwtToken(token);
+        if(usernameWithJWT.isEmpty())
+            throw new IllegalArgumentException("접근권한이 없습니다.");
         User user = userService.userDetails(id);
         if(!user.getUsername().equals(usernameWithJWT))
             throw new IllegalArgumentException("접근권한이 없습니다.");
-
-        userService.deleteUser(id);
-        return new ResponseEntity<>(new ResponseDto("정상적으로 탈퇴되었습니다.", null), HttpStatus.OK);
+        if(user == null)
+            throw new IllegalArgumentException("존재하지 않는 회원 정보입니다.");
+        return user;
     }
 
     private String parseJwt(HttpServletRequest request) {

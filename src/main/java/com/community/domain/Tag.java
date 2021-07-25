@@ -23,4 +23,9 @@ public class Tag {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="post_id")
     private Post post;
+
+    public Tag(Keyword keyword, Post post) {
+        this.keyword = keyword;
+        this.post = post;
+    }
 }

@@ -32,8 +32,6 @@ public class QPost extends EntityPathBase<Post> {
 
     public final ListPath<Review, QReview> reviews = this.<Review, QReview>createList("reviews", Review.class, QReview.class, PathInits.DIRECT2);
 
-    public final StringPath shortDescription = createString("shortDescription");
-
     public final ListPath<Tag, QTag> tag = this.<Tag, QTag>createList("tag", Tag.class, QTag.class, PathInits.DIRECT2);
 
     public final StringPath title = createString("title");

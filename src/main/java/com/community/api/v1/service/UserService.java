@@ -17,16 +17,6 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final JPQLUserRepository jpqlUserRepository;
-
-
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
-    public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
-    }
 
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
@@ -52,21 +42,14 @@ public class UserService {
     }
 
     @Transactional(readOnly = false)
-    public User updateUserInfo(Long id, UserInfoRequest req) {
-        Optional<User> user = userRepository.findById(id);
+    public User updateUserInfo(User user, UserInfoRequest req) {
 
-        if(user.isEmpty())
-            throw new IllegalArgumentException("존재하지 않는 회원 정보입니다.");
-
-       return jpqlUserRepository.updateUserBasicInfo(user.get(), req);
+        return user.setUserBasicInfo(req.getUsername(), req.getEmail(), req.getPassword());
     }
 
     @Transactional(readOnly = false)
-    public void deleteUser(Long id) {
-        Optional<User> user = userRepository.findById(id);
-        if(user.isEmpty())
-            throw new IllegalArgumentException("존재하지 않는 회원 정보입니다");
-        userRepository.delete(user.get());
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 
 

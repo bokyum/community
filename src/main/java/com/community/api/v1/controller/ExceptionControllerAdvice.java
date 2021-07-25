@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ResponseDto> illegalExHandle(IllegalArgumentException e) {
+    public ResponseEntity<ResponseDto> illegalArgumentExceptionHandle(IllegalArgumentException e) {
         log.error("[IllegalArgumentException] ex", e);
         return new ResponseEntity<>(new ResponseDto(null, e.getMessage()),
                 HttpStatus.OK);

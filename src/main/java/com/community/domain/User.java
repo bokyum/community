@@ -16,7 +16,6 @@ import java.util.*;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -66,5 +65,43 @@ public class User {
         this.lastModifiedDate = LocalDateTime.now();
     }
 
+    private void setUsername(String username) {
+        this.username = username;
+    }
 
+    private void setEmail(String email) {
+        this.email = email;
+    }
+
+    private void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    private void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    private void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    private void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public User setUserBasicInfo(String username, String email, String password) {
+        setUsername(username);
+        setEmail(email);
+        setPassword(password);
+        setLastModifiedDate(LocalDateTime.now());
+        return this;
+    }
+
+    public void addPost(Post post) {
+        this.posts.add(post);
+    }
 }

@@ -43,10 +43,10 @@ http://localhost:8080/swagger-ui/index.html#/
 
 
 ### 블로그 문서
-* /write
-* /edit
-* /search
-* /delete
+* /post/write
+* /post/@:id/edit
+* /post/search
+* /post/@:id/delete
 
 
 ## 진행중

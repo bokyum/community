@@ -20,11 +20,4 @@ public class JPQLUserRepository {
         this.em = em;
     }
 
-    public User updateUserBasicInfo(User user, UserInfoRequest req) {
-        user.setUsername(req.getUsername());
-        user.setEmail(req.getEmail());
-        user.setPassword(req.getPassword());
-        user.setLastModifiedDate(LocalDateTime.now());
-        return user;
-    }
 }
